@@ -1,0 +1,29 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.vs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# MongoDB data/config
+*.local.json
+
+# Logs
+*.log
+
+# Node modules (if any)
+node_modules/
+
+# Others
+.env
+secrets.json
+*.slnx

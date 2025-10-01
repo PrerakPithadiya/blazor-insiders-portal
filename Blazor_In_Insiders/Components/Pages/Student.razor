@@ -1,0 +1,51 @@
+@page "/student"
+
+<div class="container mt-5">
+    <h1 class="display-4 mb-4 fw-bold text-primary text-center">Student List</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Serial No</th>
+                <th>Full Name</th>
+                <th>Age</th>
+                <th>Marks</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <td>@student.SerialNo</td>
+                    <td>@student.FullName</td>
+                    <td>@student.Age</td>
+                    <td>@student.Marks</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private List<StudentData> students = new()
+    {
+        new StudentData { SerialNo = 1, FullName = "Amit Sharma", Age = 22, Marks = 85 },
+        new StudentData { SerialNo = 2, FullName = "Priya Singh", Age = 21, Marks = 92 },
+        new StudentData { SerialNo = 3, FullName = "Rahul Verma", Age = 23, Marks = 78 },
+        new StudentData { SerialNo = 4, FullName = "Sneha Patel", Age = 20, Marks = 88 },
+        new StudentData { SerialNo = 5, FullName = "Vikas Gupta", Age = 25, Marks = 95 },
+        new StudentData { SerialNo = 6, FullName = "Rohit Mehra", Age = 24, Marks = 81 },
+        new StudentData { SerialNo = 7, FullName = "Anjali Desai", Age = 22, Marks = 90 },
+        new StudentData { SerialNo = 8, FullName = "Karan Joshi", Age = 23, Marks = 76 },
+        new StudentData { SerialNo = 9, FullName = "Neha Reddy", Age = 21, Marks = 87 },
+        new StudentData { SerialNo = 10, FullName = "Suresh Kumar", Age = 25, Marks = 93 }
+    };
+
+    private class StudentData
+    {
+        public int SerialNo { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public int Marks { get; set; }
+    }
+}

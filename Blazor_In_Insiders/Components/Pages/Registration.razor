@@ -1,0 +1,101 @@
+@page "/registration"
+@rendermode InteractiveServer
+
+<div class="container mt-5" style="max-width: 600px;">
+    <h1 class="display-4 mb-4 fw-bold text-primary text-center">Registration</h1>
+
+    @if (showSuccess)
+    {
+        <div class="alert alert-success" role="alert">
+            Registration submitted successfully!
+        </div>
+    }
+
+    <EditForm Model="registrationModel" OnValidSubmit="HandleRegistration">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <InputText class="form-control" @bind-Value="registrationModel.FirstName" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <InputText class="form-control" @bind-Value="registrationModel.LastName" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <InputText class="form-control" @bind-Value="registrationModel.Email" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Confirm Email Address</label>
+            <InputText class="form-control" @bind-Value="registrationModel.ConfirmEmail" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+                <InputText type="@(showPassword ? "text" : "password")" class="form-control" @bind-Value="registrationModel.Password" />
+                @if (!string.IsNullOrEmpty(registrationModel.Password))
+                {
+                    <button type="button" class="btn btn-outline-secondary" @onclick="TogglePasswordVisibility">
+                        @(showPassword ? "Hide" : "Show")
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-group">
+                <InputText type="@(showConfirmPassword ? "text" : "password")" class="form-control" @bind-Value="registrationModel.ConfirmPassword" />
+                @if (!string.IsNullOrEmpty(registrationModel.ConfirmPassword))
+                {
+                    <button type="button" class="btn btn-outline-secondary" @onclick="ToggleConfirmPasswordVisibility">
+                        @(showConfirmPassword ? "Hide" : "Show")
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Country</label>
+            <InputText class="form-control" @bind-Value="registrationModel.Country" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">State</label>
+            <InputText class="form-control" @bind-Value="registrationModel.State" />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </EditForm>
+</div>
+
+@code {
+    private RegistrationModel registrationModel = new();
+    private bool showSuccess = false;
+    private bool showPassword = false;
+    private bool showConfirmPassword = false;
+
+    private void HandleRegistration()
+    {
+        showSuccess = true;
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
+
+    private void ToggleConfirmPasswordVisibility()
+    {
+        showConfirmPassword = !showConfirmPassword;
+    }
+
+    private class RegistrationModel
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string ConfirmEmail { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+    }
+}
