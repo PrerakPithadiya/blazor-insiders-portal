@@ -12,6 +12,12 @@
             You have logged in successfully!
         </div>
     }
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
 
     <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
         <DataAnnotationsValidator />
@@ -40,19 +46,34 @@
     private LoginModel loginModel = new();
     private bool showSuccess = false;
     private bool showPassword = false;
+    private string? errorMessage = null;
 
     private async Task HandleLogin()
     {
+        errorMessage = null;
+        showSuccess = false;
         // Hash password for security
         var passwordHash = Convert.ToBase64String(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(loginModel.Password)));
+        var collection = MongoDbService.GetCollection<Blazor_In_Insiders.Models.UserLogin>("UserLogins");
+        var emailExists = await Blazor_In_Insiders.Services.UserLoginService.FindUserLoginByEmailAsync(MongoDbService, loginModel.Email);
+        if (emailExists != null)
+        {
+            errorMessage = "This email is already registered.";
+            return;
+        }
+        var passwordExists = await Blazor_In_Insiders.Services.UserLoginService.FindUserLoginByPasswordAsync(MongoDbService, passwordHash);
+        if (passwordExists != null)
+        {
+            errorMessage = "This password is already registered.";
+            return;
+        }
         var userLogin = new Blazor_In_Insiders.Models.UserLogin
         {
             Email = loginModel.Email,
             PasswordHash = passwordHash,
-            LoginDate = DateTime.UtcNow
+            LoginDate = DateTime.UtcNow,
+            Id = Guid.NewGuid().ToString()
         };
-        userLogin.Id = Guid.NewGuid().ToString();
-        var collection = MongoDbService.GetCollection<Blazor_In_Insiders.Models.UserLogin>("UserLogins");
         await collection.InsertOneAsync(userLogin);
         showSuccess = true;
     }

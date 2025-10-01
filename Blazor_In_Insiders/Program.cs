@@ -1,6 +1,7 @@
 using Blazor_In_Insiders.Components;
 using Blazor_In_Insiders.Data;
 using Blazor_In_Insiders.Services;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,14 +12,10 @@ builder.Services.AddRazorComponents()
 // Add MongoDB settings from configuration
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 
-// Register MongoDbService with settings
+// Register MongoDbService with settings from configuration
 builder.Services.AddSingleton(sp =>
 {
-    var settings = new MongoDbSettings
-    {
-        ConnectionString = "mongodb+srv://prerakpithadiya_db_user:WbWrG2S02IoU9DXQ@cluster0.ptajimv.mongodb.net/",
-        DatabaseName = "BlazorInsidersDb"
-    };
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
     return new MongoDbService(settings);
 });
 
