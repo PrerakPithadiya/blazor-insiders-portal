@@ -12,6 +12,6 @@ namespace Blazor_In_Insiders.Services
             _database = client.GetDatabase(settings.DatabaseName);
         }
 
-        public IMongoCollection<T> GetCollection<T>(string name) => _database.GetCollection<T>(name);
+        public virtual IMongoCollection<T> GetCollection<T>(string name) => _database.GetCollection<T>(name);
     }
 }

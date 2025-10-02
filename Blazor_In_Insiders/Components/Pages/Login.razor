@@ -54,27 +54,14 @@
         showSuccess = false;
         // Hash password for security
         var passwordHash = Convert.ToBase64String(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(loginModel.Password)));
-        var collection = MongoDbService.GetCollection<Blazor_In_Insiders.Models.UserLogin>("UserLogins");
-        var emailExists = await Blazor_In_Insiders.Services.UserLoginService.FindUserLoginByEmailAsync(MongoDbService, loginModel.Email);
-        if (emailExists != null)
+        var user = await Blazor_In_Insiders.Services.UserLoginService.FindUserLoginAsync(MongoDbService, loginModel.Email, passwordHash);
+
+        if (user == null)
         {
-            errorMessage = "This email is already registered.";
+            errorMessage = "Invalid email or password.";
             return;
         }
-        var passwordExists = await Blazor_In_Insiders.Services.UserLoginService.FindUserLoginByPasswordAsync(MongoDbService, passwordHash);
-        if (passwordExists != null)
-        {
-            errorMessage = "This password is already registered.";
-            return;
-        }
-        var userLogin = new Blazor_In_Insiders.Models.UserLogin
-        {
-            Email = loginModel.Email,
-            PasswordHash = passwordHash,
-            LoginDate = DateTime.UtcNow,
-            Id = Guid.NewGuid().ToString()
-        };
-        await collection.InsertOneAsync(userLogin);
+
         showSuccess = true;
     }
 
